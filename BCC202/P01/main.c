@@ -52,14 +52,15 @@ void readMatrix(double matrix[12][12]) {
 
 double sumMatrix(double matrix[12][12]) {
     double resultado = 0;
-
+    int aux = 5;
+    int aux2 = 5;
 
     for(int i =7; i<12; i++){
-        for(int j = 1; j< 11; j++){
-            if(i*j > i*(11-i) && i*i > j*i){
-                resultado+=matrix[i][j];
-            }
+        for(int j = aux; j <= 11-aux; j++){
+            resultado+=matrix[i][j];
         }
+        aux--;
     }
+
     return resultado;
 }
