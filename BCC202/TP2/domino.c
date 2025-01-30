@@ -10,6 +10,7 @@ struct node{
 
 struct domino {
     int lenght;
+    int lenghtSorted;
     Node *head;
     Node *tail;
 };
@@ -18,7 +19,7 @@ struct domino {
 
 Domino* dominoCria(){
     Domino *domino = (Domino*)malloc(sizeof(Domino));
-    domino->lenght = 0;
+    domino->lenghtSorted = domino->lenght = 0;
     domino->head = domino->tail = NULL;
     return domino;
 }
@@ -35,12 +36,7 @@ Domino* dominoDestroi(Domino *domino) {
         free(aux);
         aux = node;
     }while(aux!=domino->tail);
-    /*
-    while (aux){
-        Node *node = aux->next;
-        free(aux);
-        aux = node;
-    }*/
+
     free(domino);
 
     return NULL;
@@ -75,6 +71,36 @@ void dominoImprime(Domino *domino) {
     } while(aux!=domino->head);
     printf("\n");
 }
+
+int canSorted(Node *node1, Node*node2){
+    if(node1->item.right == node2->item.left){
+        return 1;
+    }else if(node1->item.left == node2->item.right){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+int swapNode(Node *node1, Node*node2){
+    if(node1->item.right == node2->item.left){
+
+        return 1;
+    }else if(node1->item.right == node2->item.right){
+        return 1;
+    }else if(node1->item.left == node2->item.right){
+        return-1
+    }else if(node1->item.left == node2->item.left){
+
+    }else{
+        return 0;
+    }
+}
+
 int dominoEhPossivelOrganizar(Domino *domino, Node* node){
-    return 0;
+    if(domino->lenghtSorted==domino->lenght){
+        return;
+    }
+
+    dominoEhPossivelOrganizar(domino, node->next);
 }
