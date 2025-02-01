@@ -15,5 +15,6 @@ Domino* dominoCria();
 Domino* dominoDestroi(Domino *domino);
 int dominoAdicionaPeca(Domino *domino, Item item);
 void dominoImprime(Domino *domino);
-int dominoEhPossivelOrganizar(Domino *domino, Node* node);
+int dominoEhPossivelOrganizar(Domino *domino, Node* node1, Node* node2);
+int organizePiece(Domino*domino);
 #endif
