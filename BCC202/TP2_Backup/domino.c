@@ -110,7 +110,18 @@ int arePiecesConnected(Domino *domino) {
     return 1; // Todas as peças estão conectadas corretamente
 }
 
-int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1) {
+int dominoEhPossivelOrganizar(Domino*domino, int *arr){
+    int odd=0;
+    for(int i = LEFT_INTERVAL_PIECE;i<RIGHT_INTERVAL_PIECE; i++){
+        if(arr[i]%2!=0){
+            odd++;
+        }
+    }
+    return odd <= 2;
+}
+
+
+int dominoPlay(Domino *domino, Domino* dominoControl, Node *node1) {
     if (dominoControl->length == domino->length && arePiecesConnected(domino)) {
         return 1;
     }
@@ -122,7 +133,7 @@ int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1
             if (domino->tail->item.right == item.left) {
                 dominoAdicionaPeca(domino, item);
                 aux->used = true; // Marca a peça como usada
-                if (dominoEhPossivelOrganizar(domino, dominoControl, dominoControl->head)) return 1;
+                if (dominoPlay(domino, dominoControl, dominoControl->head)) return 1;
                 // Backtracking: remove a peça e marca como não usada
                 domino->tail = domino->tail->prev;
                 domino->length--;
@@ -133,7 +144,7 @@ int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1
                 item.left = auxInt;
                 dominoAdicionaPeca(domino, item);
                 aux->used = true; // Marca a peça como usada
-                if (dominoEhPossivelOrganizar(domino, dominoControl, dominoControl->head)) return 1;
+                if (dominoPlay(domino, dominoControl, dominoControl->head)) return 1;
                 // Backtracking: remove a peça e marca como não usada
                 domino->tail = domino->tail->prev;
                 domino->length--;
@@ -141,7 +152,7 @@ int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1
             } else if (domino->head->item.left == item.right) {
                 dominoAdicionaPecaInicio(domino, item);
                 aux->used = true; // Marca a peça como usada
-                if (dominoEhPossivelOrganizar(domino, dominoControl, dominoControl->head)) return 1;
+                if (dominoPlay(domino, dominoControl, dominoControl->head)) return 1;
                 // Backtracking: remove a peça e marca como não usada
                 domino->head = domino->head->next;
                 domino->length--;
@@ -152,7 +163,7 @@ int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1
                 item.left = auxInt;
                 dominoAdicionaPecaInicio(domino, item);
                 aux->used = true; // Marca a peça como usada
-                if (dominoEhPossivelOrganizar(domino, dominoControl, dominoControl->head)) return 1;
+                if (dominoPlay(domino, dominoControl, dominoControl->head)) return 1;
                 // Backtracking: remove a peça e marca como não usada
                 domino->head = domino->head->next;
                 domino->length--;
@@ -161,24 +172,23 @@ int dominoEhPossivelOrganizar(Domino *domino, Domino* dominoControl, Node *node1
         }
         aux = aux->next;
     }
-
     return 0;
 }
 
-int organizePiece(Domino *domino) {
+
+int organizePiece(Domino *domino, int *arr) {
     if (!domino || domino->head == NULL || domino->length == 0) return 0;
+    int isPossibleOrganize = dominoEhPossivelOrganizar(domino, arr);
 
     Domino *dominoAux = dominoCria();
     if (!dominoAux) return 0;
 
     dominoAdicionaPeca(dominoAux, domino->head->item);
-
     domino->head->used = true; // Marca a peça inicial como usada
-    if (dominoEhPossivelOrganizar(dominoAux, domino, domino->head)) {
+    if (isPossibleOrganize && dominoPlay(dominoAux, domino, domino->head)) {
         printf("YES\n");
         dominoImprime(dominoAux);
         printf("\n");
-        dominoDestroi(dominoAux);
         return 1;
     } else {
         printf("NO\n\n");
