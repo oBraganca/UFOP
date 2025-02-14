@@ -1,8 +1,8 @@
 #include "mmu.h"
 #include <stdlib.h>
 
-BlocoMemoria* MMU_buscarNasMemorias(Endereco *e, RAM* ram, BlocoMemoria* cache1, BlocoMemoria* cache2) {
-    int posicaoCache1 = e->endBloco % (sizeof(*cache1) / sizeof(*cache2));
+BlocoMemoria* MMU_buscarNasMemorias(Endereco *e, RAM* ram, Cache* L1, Cache* L2, Cache*L3) {
+    int posicaoCache1 = e->endBloco % (sizeof(*L1) / sizeof(*L2));
     int posicaoCache2 = e->endBloco % (sizeof(*cache2) / sizeof(*cache2));
     int custo = 0;
 

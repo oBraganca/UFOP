@@ -8,17 +8,18 @@ void CPU_setPrograma(CPU* cpu, Instrucao* programaAux) {
     cpu->programa = programaAux;
 }
 
-BlocoMemoria* CPU_iniciarCache(int tamanho) {
-    BlocoMemoria* umaCache = (BlocoMemoria*)malloc(tamanho * sizeof(BlocoMemoria));
+Cache* CPU_iniciarCache(int tamanho) {
+    Cache* umaCache = (Cache *)malloc(tamanho * sizeof(BlocoMemoria));
     for (int i = 0; i < tamanho; i++) {
         umaCache[i] = (BlocoMemoria){ .palavras = {0, 0, 0, 0}, .endBloco = 0, .atualizado = 0, .custo = 0, .cacheHit = 0 };
     }
     return umaCache;
 }
 
-void CPU_iniciar(CPU* cpu, RAM* ram, int tamanhoCache1, int tamanhoCache2) {
-    cpu->cache1 = CPU_iniciarCache(tamanhoCache1);
-    cpu->cache2 = CPU_iniciarCache(tamanhoCache2);
+void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
+    cpu->L1 = CPU_iniciarCache(lengthL1);
+    cpu->L2 = CPU_iniciarCache(lenghtL2);
+    cpu->L3 = CPU_iniciarCache(lengthL3);
     cpu->opcode = 0;
     cpu->PC = 0;
 
@@ -27,9 +28,9 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int tamanhoCache1, int tamanhoCache2) {
         cpu->opcode = inst.opcode;
 
         if (cpu->opcode != -1) {
-            cpu->registrador1 = MMU_buscarNasMemorias(inst.add1, ram, cpu->cache1, cpu->cache2);
-            cpu->registrador2 = MMU_buscarNasMemorias(inst.add2, ram, cpu->cache1, cpu->cache2);
-            cpu->registrador3 = MMU_buscarNasMemorias(inst.add3, ram, cpu->cache1, cpu->cache2);
+            cpu->registrador1 = MMU_buscarNasMemorias(inst.add1, ram, cpu->L1, cpu->L2, cpu->L3);
+            cpu->registrador2 = MMU_buscarNasMemorias(inst.add2, ram, cpu->L1, cpu->L2, cpu->L3);
+            cpu->registrador3 = MMU_buscarNasMemorias(inst.add3, ram, cpu->L1, cpu->L2, cpu->L3);
 
             switch (cpu->registrador1->cacheHit) {
                 case 1: cpu->hitC1++; break;

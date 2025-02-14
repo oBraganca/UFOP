@@ -17,12 +17,13 @@ typedef struct {
     int hitC1;
     int missC2;
     int hitC2;
-    BlocoMemoria* cache1;
-    BlocoMemoria* cache2;
+    Cache* L1;
+    Cache* L2;
+    Cache* L3;
 } CPU;
 
 void CPU_setPrograma(CPU* cpu, Instrucao* programaAux);
-BlocoMemoria* CPU_iniciarCache(int tamanho);
-void CPU_iniciar(CPU* cpu, RAM* ram, int tamanhoCache1, int tamanhoCache2);
+Cache* CPU_iniciarCache(int tamanho);
+void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lengthL2, int lengthL3);
 
 #endif // CPU_H

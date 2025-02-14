@@ -90,7 +90,7 @@ void programaAleatorio(RAM* ram, CPU* cpu, int qdeInstrucoes, int tamanhoRam) {
 
     criarRAM_aleatoria(ram, tamanhoRam);
     CPU_setPrograma(cpu, trecho1);
-    CPU_iniciar(cpu, ram, 32, 64);
+    CPU_iniciar(cpu, ram, 16, 32, 64);
 }
 
 int main() {

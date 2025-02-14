@@ -9,4 +9,12 @@ typedef struct {
     int cacheHit;
 } BlocoMemoria;
 
+typedef struct {
+    BlocoMemoria * lines;
+}MemorySet;
+
+typedef struct{
+    MemorySet * memorySet;
+}Cache;
+
 #endif // BLOCONMEMORIA_H
