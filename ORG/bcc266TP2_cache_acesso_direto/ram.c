@@ -35,13 +35,13 @@ BlocoMemoria RAM_getDado(RAM* ram, int endereco) {
 void RAM_imprimir(RAM* ram) {
     printf("Conteudo da RAM\n");
     for (int i = 0; i < ram->memoria->endBloco; i++) {
-        imprimirUmBloco(&ram->memoria[i]);
+        imprimirUmBloco(ram->memoria[i]);
     }
     printf("\n");
 }
 
-void imprimirUmBloco(BlocoMemoria* bloco) {
+void imprimirUmBloco(BlocoMemoria bloco) {
     for (int i = 0; i < 4; i++) {
-        printf("%d,", bloco->palavras[i]);
+        printf("%d,", bloco.palavras[i]);
     }
 }

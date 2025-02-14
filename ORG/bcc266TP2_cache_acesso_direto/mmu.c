@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 BlocoMemoria* MMU_buscarNasMemorias(Endereco *e, RAM* ram, BlocoMemoria* cache1, BlocoMemoria* cache2) {
-    int posicaoCache1 = e->endBloco % (sizeof(cache1) / sizeof(BlocoMemoria));
-    int posicaoCache2 = e->endBloco % (sizeof(cache2) / sizeof(BlocoMemoria));
+    int posicaoCache1 = e->endBloco % (sizeof(*cache1) / sizeof(*cache2));
+    int posicaoCache2 = e->endBloco % (sizeof(*cache2) / sizeof(*cache2));
     int custo = 0;
 
     if (cache1[posicaoCache1].endBloco == e->endBloco) {
@@ -35,7 +35,7 @@ BlocoMemoria* MMU_movCache2Cache1(int posicaoCache1, int posicaoCache2, BlocoMem
 
 BlocoMemoria* MMU_movRamCache2(int posicaoCache1, int posicaoCache2, BlocoMemoria* cache1, BlocoMemoria* cache2, RAM* ram, Endereco *e, int custo) {
     if (!cache2[posicaoCache2].atualizado) {
-        cache2[posicaoCache2] = RAM_getDado(ram, &(e->endBloco));
+        cache2[posicaoCache2] = RAM_getDado(ram,e->endBloco);
         cache2[posicaoCache2].cacheHit = 3;
         return MMU_movCache2Cache1(posicaoCache1, posicaoCache2, cache1, cache2, custo);
     } else {

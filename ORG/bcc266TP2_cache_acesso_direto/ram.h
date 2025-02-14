@@ -11,5 +11,7 @@ typedef struct {
 BlocoMemoria RAM_getDado(RAM* ram, int endBloco);
 void RAM_setDado(RAM* ram, int endBloco, BlocoMemoria* bloco);
 void RAM_imprimir(RAM* ram);
+void criarRAM_aleatoria(RAM* ram, int tamanho);
+void imprimirUmBloco(BlocoMemoria bloco);
 
 #endif // RAM_H
