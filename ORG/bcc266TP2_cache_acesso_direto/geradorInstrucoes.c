@@ -57,8 +57,3 @@ void GeradorInstrucoes() {
     free(ins);
     free(repeticao);
 }
-
-int main() {
-    GeradorInstrucoes();
-    return 0;
-}

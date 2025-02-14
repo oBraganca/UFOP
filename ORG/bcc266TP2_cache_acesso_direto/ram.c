@@ -24,15 +24,15 @@ void criarRAM_aleatoria(RAM* ram, int tamanho) {
     }
 }
 
-void setDado(RAM* ram, int endereco, BlocoMemoria conteudo) {
-    ram->memoria[endereco] = conteudo;
+void RAM_setDado(RAM* ram, int endereco, BlocoMemoria *conteudo) {
+    ram->memoria[endereco] = *conteudo;
 }
 
-BlocoMemoria getDado(RAM* ram, int endereco) {
+BlocoMemoria RAM_getDado(RAM* ram, int endereco) {
     return ram->memoria[endereco];
 }
 
-void imprimir(RAM* ram) {
+void RAM_imprimir(RAM* ram) {
     printf("Conteudo da RAM\n");
     for (int i = 0; i < ram->memoria->endBloco; i++) {
         imprimirUmBloco(&ram->memoria[i]);
