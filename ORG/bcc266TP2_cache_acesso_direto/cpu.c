@@ -7,14 +7,45 @@
 void CPU_setPrograma(CPU* cpu, Instrucao* programaAux) {
     cpu->programa = programaAux;
 }
+#include <stdio.h>
+#include <stdlib.h>
 
-Cache* CPU_iniciarCache(int tamanho) {
-    Cache* umaCache = (Cache *)malloc(tamanho * sizeof(BlocoMemoria));
-    for (int i = 0; i < tamanho; i++) {
-        umaCache[i] = (BlocoMemoria){ .palavras = {0, 0, 0, 0}, .endBloco = 0, .atualizado = 0, .custo = 0, .cacheHit = 0 };
+Cache *CPU_iniciarCache(int linhasPorConjunto) {
+    int numConjuntos = linhasPorConjunto/2;
+    Cache *umaCache = (Cache *)malloc(sizeof(Cache));
+    if (!umaCache) {
+        printf("Erro ao alocar memoria para Cache.\n");
+        return NULL;
     }
+
+    umaCache->memorySet = (MemorySet *)malloc(numConjuntos * sizeof(MemorySet));
+    if (!umaCache->memorySet) {
+        printf("Erro ao alocar memoria para MemorySet.\n");
+        free(umaCache);
+        return NULL;
+    }
+
+    for (int i = 0; i < numConjuntos; i++) {
+        umaCache->memorySet[i].lines = (BlocoMemoria *)malloc(2 * sizeof(BlocoMemoria));
+        if (!umaCache->memorySet[i].lines) {
+            printf("Erro ao alocar memoria para linhas do conjunto %d.\n", i);
+            // Libera memória alocada anteriormente
+            for (int j = 0; j < i; j++) {
+                free(umaCache->memorySet[j].lines);
+            }
+            free(umaCache->memorySet);
+            free(umaCache);
+            return NULL;
+        }
+
+        for (int j = 0; j < 2; j++) {
+            umaCache->memorySet[i].lines[j] = (BlocoMemoria){ .palavras = {0, 0, 0, 0}, .endBloco = 0, .atualizado = 0, .custo = 0, .cacheHit = 0 };
+        }
+    }
+
     return umaCache;
 }
+
 
 void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
     cpu->L1 = CPU_iniciarCache(lengthL1);

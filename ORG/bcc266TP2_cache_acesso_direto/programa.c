@@ -54,7 +54,7 @@ void programaAleatorioRepeticoes(RAM* ram, CPU* cpu) {
 
     criarRAM_aleatoria(ram, 1000);
     CPU_setPrograma(cpu, trecho1);
-    CPU_iniciar(cpu, ram, 16, 32);
+    CPU_iniciar(cpu, ram, 16, 32, 64);
 }
 
 void programaAleatorio(RAM* ram, CPU* cpu, int qdeInstrucoes, int tamanhoRam) {
