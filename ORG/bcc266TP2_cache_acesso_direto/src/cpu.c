@@ -66,19 +66,22 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
             switch (cpu->registrador1->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
-                case 3: cpu->missC1++; cpu->missC2++; break;
+                case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
             }
 
             switch (cpu->registrador2->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
-                case 3: cpu->missC1++; cpu->missC2++; break;
+                case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
             }
 
             switch (cpu->registrador3->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
-                case 3: cpu->missC1++; cpu->missC2++; break;
+                case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
             }
 
             switch (cpu->opcode) {
@@ -103,6 +106,7 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
                     printf("Custo ateh o momento.... %d\n", cpu->custo);
                     printf("Ateh o momento ... Hit C1: %d Miss C1: %d\n", cpu->hitC1, cpu->missC1);
                     printf("Ateh o momento ... Hit C2: %d Miss C2: %d\n", cpu->hitC2, cpu->missC2);
+                    printf("Ateh o momento ... Hit C3: %d Miss C3: %d\n", cpu->hitC3, cpu->missC3);
                     break;
             }
 
