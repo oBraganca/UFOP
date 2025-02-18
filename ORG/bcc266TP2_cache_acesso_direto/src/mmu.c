@@ -1,6 +1,24 @@
 #include "../include/mmu.h"
 #include <stdlib.h>
 
+// Função para atualizar o tempo de acesso de um bloco
+void atualizarUltimoAcesso(Cache *cache, int linha) {
+    cache->memorySet->lines[linha].ultimoAcesso = time(NULL);
+}
+
+// Função para encontrar o bloco menos recentemente usado (LRU)
+int encontrarLRU(Cache *cache) {
+    int lruIndex = 0;
+    time_t menorTempo = time(NULL);  // Inicializa com o tempo atual
+    for (int i = 0; i < cache->memorySet->numLinhas; i++) {
+        if (cache->memorySet->lines[i].ultimoAcesso < menorTempo) {
+            menorTempo = cache->memorySet->lines[i].ultimoAcesso;
+            lruIndex = i;
+        }
+    }
+    return lruIndex;
+}
+
 BlocoMemoria* MMU_buscarNasMemorias(Endereco *e, RAM* ram, Cache* L1, Cache* L2, Cache* L3) {
     int numConjuntosL1 = sizeof(*L1->memorySet) / sizeof(L1->memorySet[0]);
     int numConjuntosL2 = sizeof(*L2->memorySet) / sizeof(L2->memorySet[0]);
