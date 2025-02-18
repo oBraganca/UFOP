@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "ram.h"
+#include "../include/ram.h"
 
 void criarRAM_vazia(RAM* ram, int tamanho) {
     ram->memoria = (BlocoMemoria*)malloc(tamanho * sizeof(BlocoMemoria));

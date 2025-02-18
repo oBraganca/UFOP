@@ -1,6 +1,6 @@
-#include "cpu.h"
-#include "mmu.h"
-#include "ram.h"
+#include "../include/cpu.h"
+#include "../include/mmu.h"
+#include "../include/ram.h"
 #include <stdio.h>
 #include <stdlib.h>
 

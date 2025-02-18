@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "ram.h"
-#include "cpu.h"
-#include "instrucao.h"
+#include "../include/ram.h"
+#include "../include/cpu.h"
+#include "../include/instrucao.h"
 
 void programaAleatorioRepeticoes(RAM* ram, CPU* cpu) {
     Instrucao* trecho1 = (Instrucao*)malloc(10001 * sizeof(Instrucao));

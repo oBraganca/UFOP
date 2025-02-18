@@ -1,4 +1,4 @@
-#include "mmu.h"
+#include "../include/mmu.h"
 #include <stdlib.h>
 
 BlocoMemoria* MMU_buscarNasMemorias(Endereco *e, RAM* ram, Cache* L1, Cache* L2, Cache* L3) {
