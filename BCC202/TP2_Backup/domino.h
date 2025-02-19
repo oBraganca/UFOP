@@ -3,21 +3,23 @@
 
 #define RIGHT_INTERVAL_PIECE 6
 #define LEFT_INTERVAL_PIECE 0
-typedef struct{
+typedef struct
+{
     int left;
     int right;
     int sorted;
-}Item;
+} Item;
 
 typedef struct domino Domino;
 typedef struct node Node;
 
-
-Domino* dominoCria();
-Domino* dominoDestroi(Domino *domino);
+Domino *dominoCria();
+Domino *dominoDestroi(Domino *domino);
 int dominoAdicionaPeca(Domino *domino, Item item);
+int dominoAdicionaPecaInicio(Domino*, Item);
+int arePiecesConnected(Domino*);
 void dominoImprime(Domino *domino);
-int dominoEhPossivelOrganizar(Domino *domino, int*);
-int dominoPlay(Domino*, Domino*, Node *);
-int organizePiece(Domino*domino, int*);
+int dominoEhPossivelOrganizar(Domino *domino, int *);
+int dominoPlay(Domino *, Domino *, Node *);
+int organizePiece(Domino *domino, int *);
 #endif
