@@ -7,8 +7,6 @@
 void CPU_setPrograma(CPU* cpu, Instrucao* programaAux) {
     cpu->programa = programaAux;
 }
-#include <stdio.h>
-#include <stdlib.h>
 
 Cache *CPU_iniciarCache(int linhasPorConjunto) {
     int numConjuntos = linhasPorConjunto/2;
@@ -19,6 +17,7 @@ Cache *CPU_iniciarCache(int linhasPorConjunto) {
     }
 
     umaCache->memorySet = (MemorySet *)malloc(numConjuntos * sizeof(MemorySet));
+    umaCache->numConjuntos = numConjuntos;
     if (!umaCache->memorySet) {
         printf("Erro ao alocar memoria para MemorySet.\n");
         free(umaCache);
@@ -39,7 +38,14 @@ Cache *CPU_iniciarCache(int linhasPorConjunto) {
         }
 
         for (int j = 0; j < 2; j++) {
-            umaCache->memorySet[i].lines[j] = (BlocoMemoria){ .palavras = {0, 0, 0, 0}, .endBloco = 0, .atualizado = 0, .custo = 0, .cacheHit = 0 };
+            umaCache->memorySet[i].lines[j] = (BlocoMemoria){ 
+                .palavras = {0, 0, 0, 0}, 
+                .endBloco = -1, 
+                .atualizado = 0, 
+                .custo = 0, 
+                .cacheHit = 0,
+                .ultimoAcesso = 0 
+            };
         }
     }
 
@@ -62,7 +68,9 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
             cpu->registrador1 = MMU_buscarNasMemorias(inst.add1, ram, cpu->L1, cpu->L2, cpu->L3);
             cpu->registrador2 = MMU_buscarNasMemorias(inst.add2, ram, cpu->L1, cpu->L2, cpu->L3);
             cpu->registrador3 = MMU_buscarNasMemorias(inst.add3, ram, cpu->L1, cpu->L2, cpu->L3);
+            
 
+            //int tempo = encontrarLRU(cpu->L1);
             switch (cpu->registrador1->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
@@ -111,6 +119,9 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
                     break;
             }
 
+            cpu->registrador1->cacheHit = 0;
+            cpu->registrador2->cacheHit = 0;
+            cpu->registrador3->cacheHit = 0;
             cpu->PC++;
         }
     }
