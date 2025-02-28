@@ -60,6 +60,8 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
     cpu->opcode = 0;
     cpu->PC = 0;
 
+
+    cpu->missC1 = cpu->missC2 = cpu->missC3 = cpu->hitC1 = cpu->hitC2 = cpu->hitC3 = 0;
     while (cpu->opcode != -1) {
         Instrucao inst = cpu->programa[cpu->PC];
         cpu->opcode = inst.opcode;
@@ -75,21 +77,21 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
                 case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
-                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; cpu->hitRAM++; break;
             }
 
             switch (cpu->registrador2->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
                 case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
-                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; cpu->hitRAM++; break;
             }
 
             switch (cpu->registrador3->cacheHit) {
                 case 1: cpu->hitC1++; break;
                 case 2: cpu->missC1++; cpu->hitC2++; break;
                 case 3: cpu->missC1++; cpu->missC2++; cpu->hitC3++; break;
-                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; break;
+                case 4: cpu->missC1++; cpu->missC2++; cpu->missC3++; cpu->hitRAM++; break;
             }
 
             switch (cpu->opcode) {
@@ -101,21 +103,21 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
                     cpu->registrador3->palavras[inst.add3->endPalavra] = cpu->registrador1->palavras[inst.add1->endPalavra] + cpu->registrador2->palavras[inst.add2->endPalavra];
                     cpu->registrador3->atualizado = 1;
                     cpu->custo += cpu->registrador1->custo + cpu->registrador2->custo + cpu->registrador3->custo;
-                    printf("Inst sum -> RAM posicao %d com conteudo na cache 1 %d\n", inst.add3->endBloco, cpu->registrador3->palavras[inst.add3->endPalavra]);
+                    /*printf("Inst sum -> RAM posicao %d com conteudo na cache 1 %d\n", inst.add3->endBloco, cpu->registrador3->palavras[inst.add3->endPalavra]);
                     printf("Custo ateh o momento.... %d\n", cpu->custo);
                     printf("Ateh o momento ... Hit C1: %d Miss C1: %d\n", cpu->hitC1, cpu->missC1);
                     printf("Ateh o momento ... Hit C2: %d Miss C2: %d\n", cpu->hitC2, cpu->missC2);
-                    printf("Ateh o momento ... Hit C3: %d Miss C3: %d\n", cpu->hitC3, cpu->missC3);
+                    printf("Ateh o momento ... Hit C3: %d Miss C3: %d\n", cpu->hitC3, cpu->missC3);*/
                     break;
                 case 1:
                     cpu->registrador3->palavras[inst.add3->endPalavra] = cpu->registrador1->palavras[inst.add1->endPalavra] - cpu->registrador2->palavras[inst.add2->endPalavra];
                     cpu->registrador3->atualizado = 1;
                     cpu->custo += cpu->registrador1->custo + cpu->registrador2->custo + cpu->registrador3->custo;
-                    printf("Inst sub -> RAM posicao %d com conteudo na cache 1 %d\n", inst.add3->endBloco, cpu->registrador3->palavras[inst.add3->endPalavra]);
+                    /*printf("Inst sub -> RAM posicao %d com conteudo na cache 1 %d\n", inst.add3->endBloco, cpu->registrador3->palavras[inst.add3->endPalavra]);
                     printf("Custo ateh o momento.... %d\n", cpu->custo);
                     printf("Ateh o momento ... Hit C1: %d Miss C1: %d\n", cpu->hitC1, cpu->missC1);
                     printf("Ateh o momento ... Hit C2: %d Miss C2: %d\n", cpu->hitC2, cpu->missC2);
-                    printf("Ateh o momento ... Hit C3: %d Miss C3: %d\n", cpu->hitC3, cpu->missC3);
+                    printf("Ateh o momento ... Hit C3: %d Miss C3: %d\n", cpu->hitC3, cpu->missC3);*/
                     break;
             }
 
@@ -124,5 +126,24 @@ void CPU_iniciar(CPU* cpu, RAM* ram, int lengthL1, int lenghtL2, int lengthL3) {
             cpu->registrador3->cacheHit = 0;
             cpu->PC++;
         }
+
     }
+    // Imprimindo as informações de cache hit e cache miss em duas colunas com borda
+    printf("\n\t+---------------------------------------------------------------+\n");
+    printf("\t| CACHE HIT CACHE L1: %d\t| CACHE MISS CACHE L1: %d \t|\n", cpu->hitC1, cpu->missC1);
+    printf("\t| CACHE HIT CACHE L2: %d\t| CACHE MISS CACHE L2: %d \t|\n", cpu->hitC2, cpu->missC2);
+    printf("\t| CACHE HIT CACHE L3: %d\t| CACHE MISS CACHE L3: %d \t|\n", cpu->hitC3, cpu->missC3);
+    printf("\t+---------------------------------------------------------------+\n");
+
+    // Imprimindo a CACHE HIT RAM com borda
+    printf("\n\t+-----------------------+\n");
+    printf("\t| CACHE HIT RAM: %d\t|\n", cpu->hitRAM);
+    printf("\t+-----------------------+\n");
+
+    // Imprimindo o custo total, hit total e miss total com borda
+    int totalHit = cpu->hitC1 + cpu->hitC2 + cpu->hitC3;
+    int totalMiss = cpu->missC1 + cpu->missC2 + cpu->missC3;
+    printf("\n\t+-----------------------------------------------------------------------+\n");
+    printf("\t| Custo total: %d\t| Hit total: %d\t| Miss total: %d \t|\n", cpu->custo, totalHit, totalMiss);
+    printf("\t+-----------------------------------------------------------------------+\n\n");
 }

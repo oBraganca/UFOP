@@ -11,50 +11,84 @@
 void GeradorInstrucoes() {
     int aleatorio;
     char separador = ':';
-    srand(time(NULL));
     char** ins = (char**)malloc(QTD_INS * sizeof(char*));
+
+    if (!ins) {
+        printf("Erro ao alocar memória para ins.\n");
+        return;
+    }
 
     int N = 2;
     int instruc[] = { 6, 6, 6, 6, 6, 6, 6, 6 };
 
     char** repeticao = (char**)malloc(TAM_FOR * sizeof(char*));
+    if (!repeticao) {
+        printf("Erro ao alocar memória para repeticao.\n");
+        free(ins);
+        return;
+    }
+
     for (int i = 0; i < TAM_FOR; i++) {
         aleatorio = rand() % N;
-        char* s = (char*)malloc(50 * sizeof(char));
-        sprintf(s, "%d", aleatorio);
+        repeticao[i] = (char*)malloc(50 * sizeof(char));
+        if (!repeticao[i]) {
+            printf("Erro ao alocar memória para repeticao[%d].\n", i);
+            for (int j = 0; j < i; j++) free(repeticao[j]);
+            free(repeticao);
+            free(ins);
+            return;
+        }
+
+        sprintf(repeticao[i], "%d", aleatorio);
         for (int j = 0; j < instruc[aleatorio]; j++) {
             char temp[10];
             sprintf(temp, "%c%d", separador, rand() % TAM_MEM);
-            strcat(s, temp);
+            strcat(repeticao[i], temp);
         }
-        repeticao[i] = s;
     }
 
     for (int i = 0; i < QTD_INS;) {
         aleatorio = rand() % 100 + 1;
-        if (aleatorio <= PROB_FOR && i + TAM_FOR < QTD_INS) {
-            for (int j = 0; j < TAM_FOR; j++) {
-                ins[i++] = repeticao[j];
+        if (aleatorio <= PROB_FOR && i + TAM_FOR <= QTD_INS) {
+            for (int j = 0; j < TAM_FOR && i < QTD_INS; j++) {
+                ins[i++] = strdup(repeticao[j]);  // Criamos uma cópia da string
             }
         } else {
             aleatorio = rand() % N;
-            char* s = (char*)malloc(50 * sizeof(char));
-            sprintf(s, "%d", aleatorio);
+            ins[i] = (char*)malloc(50 * sizeof(char));
+            if (!ins[i]) {
+                printf("Erro ao alocar memória para ins[%d].\n", i);
+                break;
+            }
+
+            sprintf(ins[i], "%d", aleatorio);
             for (int j = 0; j < instruc[aleatorio]; j++) {
                 char temp[10];
                 sprintf(temp, "%c%d", separador, rand() % TAM_MEM);
-                strcat(s, temp);
+                strcat(ins[i], temp);
             }
-            ins[i++] = s;
+            i++;
         }
     }
 
     FILE* file = fopen("programa.txt", "w");
+    if (!file) {
+        printf("Erro ao abrir arquivo.\n");
+        return;
+    }
+
     for (int i = 0; i < QTD_INS; i++) {
         fprintf(file, "%s\n", ins[i]);
-        free(ins[i]);
+        free(ins[i]);  // Liberamos cada string individualmente
     }
+    
     fclose(file);
     free(ins);
-    free(repeticao);
+
+    for (int i = 0; i < TAM_FOR; i++) {
+        free(repeticao[i]);  // Agora podemos liberar as strings de repeticao
+    }
+    free(repeticao);  // Liberamos o array repeticao
 }
+
+

@@ -19,6 +19,7 @@ typedef struct {
     int hitC2;
     int missC3;
     int hitC3;
+    int hitRAM;
     Cache* L1;
     Cache* L2;
     Cache* L3;

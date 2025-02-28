@@ -5,9 +5,11 @@
 #include "../include/ram.h"
 #include "../include/cpu.h"
 #include "../include/instrucao.h"
+#include "../include/geradorInstrucoes.h"
 
 void programaAleatorioRepeticoes(RAM* ram, CPU* cpu) {
     Instrucao* trecho1 = (Instrucao*)malloc(10001 * sizeof(Instrucao));
+    
     FILE* file = fopen("programa.txt", "r");
     if (file == NULL) {
         perror("Error opening file");
@@ -94,9 +96,12 @@ void programaAleatorio(RAM* ram, CPU* cpu, int qdeInstrucoes, int tamanhoRam) {
 }
 
 int main() {
+
+    srand(time(NULL));
+    GeradorInstrucoes();
     RAM* ram = (RAM*)malloc(sizeof(RAM));
     CPU* cpu = (CPU*)malloc(sizeof(CPU));
-    programaAleatorio(ram, cpu, 1000, 100);
-    // programaAleatorioRepeticoes(ram, cpu);
+    //programaAleatorio(ram, cpu, 1000, 100);
+    programaAleatorioRepeticoes(ram, cpu);
     return 0;
 }
